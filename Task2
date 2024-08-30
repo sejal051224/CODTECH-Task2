@@ -1,82 +1,83 @@
-CREATE TABLE Students (
+/* */
+
+CREATE DATABASE STUDENT_INFO
+CREATE TABLE Student(
     StudentID INT PRIMARY KEY IDENTITY(1,1),
     FirstName NVARCHAR(50) NOT NULL,
     LastName NVARCHAR(50) NOT NULL,
     DateOfBirth DATE,
     Email NVARCHAR(100)
 );
-CREATE TABLE Courses (
+INSERT INTO Student (FirstName, LastName, DateOfBirth, Email)
+VALUES 
+('John', 'Doe', '2000-01-15', 'john.doe@example.com'),
+('Jane', 'Smith', '1999-05-30', 'jane.smith@example.com');
+SELECT * FROM student
+CREATE TABLE Course(
     CourseID INT PRIMARY KEY IDENTITY(1,1),
     CourseName NVARCHAR(100) NOT NULL,
     CourseCode NVARCHAR(10) UNIQUE NOT NULL,
     Credits INT
 );
-CREATE TABLE Enrollments (
-    EnrollmentID INT PRIMARY KEY IDENTITY(1,1),
-    StudentID INT FOREIGN KEY REFERENCES Students(StudentID),
-    CourseID INT FOREIGN KEY REFERENCES Courses(CourseID),
-    Grade CHAR(2)
-);
-INSERT INTO Students (FirstName, LastName, DateOfBirth, Email)
-VALUES 
-('John', 'Doe', '2000-01-15', 'john.doe@example.com'),
-('Jane', 'Smith', '1999-05-30', 'jane.smith@example.com');
-INSERT INTO Courses (CourseName, CourseCode, Credits)
+INSERT INTO Course (CourseName, CourseCode, Credits)
 VALUES 
 ('Database Systems', 'DB101', 3),
 ('Data Structures', 'CS102', 4);
-INSERT INTO Enrollments (StudentID, CourseID, Grade)
-VALUES 
-(1, 1, 'A'),
-(2, 2, 'B');
-
+select * from course
+CREATE TABLE Enrollment(
+    EnrollmentID INT PRIMARY KEY IDENTITY(1,1),
+    StudentID INT FOREIGN KEY REFERENCES Student(StudentID),
+    CourseID INT FOREIGN KEY REFERENCES Course(CourseID),
+    Grade CHAR(2)
+);
+INSERT INTO Enrollment (StudentID, CourseID, Grade)
+VALUES (1, 1, 'A'),(2, 2, 'B');
+select*from Enrollment
 --inner JOIN
-
 SELECT 
-    Students.FirstName, 
-    Students.LastName, 
-    Courses.CourseName, 
-    Enrollments.Grade
+    Student.FirstName, 
+    Student.LastName, 
+    Course.CourseName, 
+    Enrollment.Grade
 FROM 
-    Enrollments
+    Enrollment
 INNER JOIN 
-    Students ON Enrollments.StudentID = Students.StudentID
+    Student ON Enrollment.StudentID = Student.StudentID
 INNER JOIN 
-    Courses ON Enrollments.CourseID = Courses.CourseID;
-
+    Course ON Enrollment.CourseID = Course.CourseID;
 --left JOIN
 SELECT 
-    Students.FirstName, 
-    Students.LastName, 
-    Courses.CourseName, 
-    Enrollments.Grade
+    Student.FirstName, 
+    Student.LastName, 
+    Course.CourseName, 
+    Enrollment.Grade
 FROM 
-    Students
+    Student
 LEFT JOIN 
-    Enrollments ON Students.StudentID = Enrollments.StudentID
+    Enrollment ON Student.StudentID = Enrollment.StudentID
 LEFT JOIN 
-    Courses ON Enrollments.CourseID = Courses.CourseID;
+    Course ON Enrollment.CourseID = Course.CourseID;
 --Right JOIN
 SELECT 
-    Students.FirstName, 
-    Students.LastName, 
-    Courses.CourseName, 
-    Enrollments.Grade
+    Student.FirstName, 
+    Student.LastName, 
+    Course.CourseName, 
+    Enrollment.Grade
 FROM 
-    Courses
+    Course
 RIGHT JOIN 
-    Enrollments ON Courses.CourseID = Enrollments.CourseID
+    Enrollment ON Course.CourseID = Enrollment.CourseID
 RIGHT JOIN 
-    Students ON Enrollments.StudentID = Students.StudentID;
+    Student ON Enrollment.StudentID = Student.StudentID;
 --Full outer JOIN
 SELECT 
-    Students.FirstName, 
-    Students.LastName, 
-    Courses.CourseName, 
-    Enrollments.Grade
+    Student.FirstName, 
+    Student.LastName, 
+    Course.CourseName, 
+    Enrollment.Grade
 FROM 
-    Students
+    Student
 FULL OUTER JOIN 
-    Enrollments ON Students.StudentID = Enrollments.StudentID
+    Enrollment ON Student.StudentID = Enrollment.StudentID
 FULL OUTER JOIN 
-    Courses ON Enrollments.CourseID = Courses.CourseID;
+    Course ON Enrollment.CourseID = Course.CourseID;
